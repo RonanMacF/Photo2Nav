@@ -21,6 +21,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private static int LOAD_IMAGE_RESULTS = 1;
     private Button button;
+    private String path = "/storage/emulated/0/DCIM/Camera/IMG_20171219_122829.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +46,24 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
             ExifInterface exifInterface = null;
             InputStream in = null;
-            try {
-                 exifInterface = new ExifInterface(imagePath);
-            } catch (IOException e) {
-                Log.e("homeActivity", "Failed exifInterface Initialise", e);            }
             cursor.close();
+            try {
+                in = getContentResolver().openInputStream(pickedImage);
+                exifInterface = new ExifInterface(in);
+
+                float[] latlbg = new float[2];
+                exifInterface.getLatLong(latlbg);
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?&daddr="+latlbg[0] +"," + latlbg[1]));
+                startActivity(intent);
+
+            } catch (IOException e) {
+                Log.e("homeActivity", "Failed exifInterface Initialise", e);
+            }
+
         }
+
+
     }
 
     @Override
