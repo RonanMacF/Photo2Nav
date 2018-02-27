@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "600688647124",
+    "firebase_url": "https://photo2nav.firebaseio.com",
+    "project_id": "photo2nav",
+    "storage_bucket": "photo2nav.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600688647124:android:64ff9f95155e2b5d",
+        "android_client_info": {
+          "package_name": "com.trinity.ebusiness.photo2nav"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600688647124-bnj0n9ds3lgvjm01r9ah3773fbbkajop.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.trinity.ebusiness.photo2nav",
+            "certificate_hash": "54abca4bc0389acb5f5ff52c677020737cb5937c"
+          }
+        },
+        {
+          "client_id": "600688647124-1hcu3k6utc7bq88d2cqlcgkovm3ms6dn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwnBID_lT7uXwoeOhCYaa2_qsTXi3622k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "600688647124-1hcu3k6utc7bq88d2cqlcgkovm3ms6dn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
