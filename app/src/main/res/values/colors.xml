@@ -7,6 +7,7 @@
     <color name="secondary">#32db64</color>
     <color name="danger">#f53d3d</color>
     <color name="light">#f4f4f4</color>
-    <color name="dark">#222</color>
+    <color name="dark">#000</color>
     <color name="twitter">#55acee</color>
+    <color name="limegreen">#7DDB3A</color>
 </resources>

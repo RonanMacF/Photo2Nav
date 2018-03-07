@@ -13,6 +13,17 @@ tools:context="com.trinity.ebusiness.photo2nav.SignUpActivity">
     android:layout_height="wrap_content"
     android:layout_weight="1">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="301dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/photo2navlogo"
+        tools:layout_editor_absoluteX="55dp"
+        tools:layout_editor_absoluteY="130dp"
+        android:background="@color/dark"/>
+
 
 
 </RelativeLayout>
@@ -22,7 +33,7 @@ tools:context="com.trinity.ebusiness.photo2nav.SignUpActivity">
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:background="@color/colorPrimary">
+    android:background="@color/dark">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,8 +51,8 @@ tools:context="com.trinity.ebusiness.photo2nav.SignUpActivity">
             android:hint="email"
             android:inputType="textEmailAddress"
             android:paddingBottom="15dp"
-            android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent" />
+            android:textColor="@color/light"
+            android:textColorHint="@color/light" />
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -52,7 +63,7 @@ tools:context="com.trinity.ebusiness.photo2nav.SignUpActivity">
             android:inputType="textPassword"
             android:paddingBottom="15dp"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
-            android:textColorHint="@color/colorAccent" />
+            android:textColorHint="@color/light" />
 
         <Button
             android:id="@+id/buttonSignUp"
@@ -63,7 +74,7 @@ tools:context="com.trinity.ebusiness.photo2nav.SignUpActivity">
             android:background="@drawable/rounded_button_transparent"
             android:text="Sign Up"
             android:textAllCaps="false"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/light" />
 
         <TextView
             android:id="@+id/textViewLogin"
@@ -73,7 +84,7 @@ tools:context="com.trinity.ebusiness.photo2nav.SignUpActivity">
             android:text="Already have an account? Login"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/light" />
 
 
     </LinearLayout>

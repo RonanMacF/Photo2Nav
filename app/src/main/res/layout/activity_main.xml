@@ -12,7 +12,7 @@ tools:context="com.trinity.ebusiness.photo2nav.MainActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/lightPrimary">
+        android:background="@color/dark">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,7 +28,7 @@ tools:context="com.trinity.ebusiness.photo2nav.MainActivity">
                 android:id="@+id/imageView"
                 android:layout_width="355dp"
                 android:layout_height="301dp"
-                app:srcCompat="@drawable/photo2nav_logo"
+                app:srcCompat="@drawable/photo2navlogo"
                 tools:layout_editor_absoluteX="55dp"
                 tools:layout_editor_absoluteY="130dp" />
 
