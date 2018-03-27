@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,7 +39,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final String TAG = "ViewDatabase";
     private  String userID;
-
+    private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +47,30 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_home);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
-
+        text = (TextView) findViewById(R.id.editText1);
         button = (Button)findViewById(R.id.GalleryButton);
         button.setOnClickListener(this);
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
+        Log.e(TAG, "We made itt here");
+
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                UserLocationPoints uInfo = dataSnapshot.child(userID).getValue(UserLocationPoints.class);
+                Log.e(TAG, "onDataChange: " + uInfo.getLatitude().toString());
+                Log.d(TAG, "We made it here");
+                text.setText(uInfo.getLatitude().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -88,19 +110,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                showData(dataSnapshot);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 
     }

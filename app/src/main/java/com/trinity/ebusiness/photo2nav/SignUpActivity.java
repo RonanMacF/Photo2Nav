@@ -39,7 +39,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.textViewLogin).setOnClickListener(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        UserLocationPoints uInfo = mDatabase.child(mAuth.getCurrentUser().getUid()).getValue();
     }
 
     // Registers a new user with firebase + saves an empty lat + lon ArrayList object to the real time database for future saving of coordinates.
