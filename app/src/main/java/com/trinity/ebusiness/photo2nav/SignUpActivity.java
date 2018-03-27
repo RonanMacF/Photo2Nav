@@ -14,11 +14,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText editTextEmail, editTextPassword;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +36,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
         findViewById(R.id.textViewLogin).setOnClickListener(this);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
     }
 
     private void registerUser(){
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
+        final String password = editTextPassword.getText().toString().trim();
 
         if (email.isEmpty()) {
             editTextEmail.setError("Email is required");
@@ -62,10 +68,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    signIn(email, password);
+                    UserLocationPoints userLocationPoints = new UserLocationPoints();
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    mDatabase.child(user.getUid()).setValue(userLocationPoints);
                     finish();
                     startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
                 } else {
@@ -82,6 +93,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         });
 
     }
+
+    public void signIn(String email, String password){
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    finish();
+                    Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View view) {

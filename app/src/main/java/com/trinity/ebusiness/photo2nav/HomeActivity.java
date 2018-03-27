@@ -12,24 +12,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static int LOAD_IMAGE_RESULTS = 1;
     private Button button;
-    private String path = "/storage/emulated/0/DCIM/Camera/IMG_20171219_122829.jpg";
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private static final String TAG = "ViewDatabase";
+    private  String userID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         button = (Button)findViewById(R.id.GalleryButton);
         button.setOnClickListener(this);
+        FirebaseUser user = mAuth.getCurrentUser();
+        userID = user.getUid();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -51,11 +70,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 in = getContentResolver().openInputStream(pickedImage);
                 exifInterface = new ExifInterface(in);
 
-                float[] latlbg = new float[2];
-                exifInterface.getLatLong(latlbg);
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("http://maps.google.com/maps?&daddr="+latlbg[0] +"," + latlbg[1]));
-                startActivity(intent);
+                float[] latlng = new float[2];
+                exifInterface.getLatLong(latlng);
+
+                if(latlng[0] != 0.0 && latlng[1] != 0.0) {
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    //UserLocationPoints userLocationPoints = mDatabase.child(user.getUid()).getRoot();
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                            Uri.parse("http://maps.google.com/maps?&daddr=" + latlng[0] + "," + latlng[1]));
+                    startActivity(intent);
+                }
 
             } catch (IOException e) {
                 Log.e("homeActivity", "Failed exifInterface Initialise", e);
@@ -63,7 +87,33 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                showData(dataSnapshot);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void showData(DataSnapshot dataSnapshot) {
+        for(DataSnapshot ds : dataSnapshot.getChildren()){
+            UserLocationPoints uInfo = new UserLocationPoints();
+            uInfo.setLatitude(ds.child(userID).getValue(UserLocationPoints.class).getLatitude()); //set the name
+            uInfo.setLongitude(ds.child(userID).getValue(UserLocationPoints.class).getLongitude()); //set the email
+
+            //display all the information
+            Log.d(TAG, "showData: lat: " + uInfo.getLatitude());
+            Log.d(TAG, "showData: lon: " + uInfo.getLongitude());
+        }
     }
 
     @Override

@@ -86,10 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.buttonLogin:
-                //userLogin();    CHANGE ONCE APP IS READY TO GO
-                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                userLogin();
                 break;
         }
     }
