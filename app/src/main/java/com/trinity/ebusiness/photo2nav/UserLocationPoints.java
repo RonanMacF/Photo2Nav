@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Created by ronan on 20/03/2018.
+ * This is the class which will be saved in the Firbase database, there is 2 arrayLists, one containing latitude and the other containing logitude
  */
 
 public class UserLocationPoints {

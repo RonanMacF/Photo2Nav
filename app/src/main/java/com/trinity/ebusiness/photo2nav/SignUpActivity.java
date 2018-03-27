@@ -1,8 +1,10 @@
 package com.trinity.ebusiness.photo2nav;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.View;
@@ -40,6 +42,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    // Registers a new user with firebase + saves an empty lat + lon ArrayList object to the real time database for future saving of coordinates.
     private void registerUser(){
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
@@ -75,6 +78,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 if (task.isSuccessful()) {
                     signIn(email, password);
                     UserLocationPoints userLocationPoints = new UserLocationPoints();
+                    userLocationPoints.updateLatitude(5);
+                    userLocationPoints.updateLongitude(6);
+
                     FirebaseUser user = mAuth.getCurrentUser();
                     mDatabase.child(user.getUid()).setValue(userLocationPoints);
                     finish();
@@ -94,22 +100,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    // This function sigs the user in so we can initalising a firebase object to be saved to the account as the account in created
     public void signIn(String email, String password){
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    finish();
-                    Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                } else {
+                if (!task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-
 
     @Override
     public void onClick(View view) {
