@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +41,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "ViewDatabase";
     private  String userID;
     private TextView text;
+    UserLocationPoints uInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +54,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         button.setOnClickListener(this);
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
-        Log.e(TAG, "We made itt here");
-
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                UserLocationPoints uInfo = dataSnapshot.child(userID).getValue(UserLocationPoints.class);
-                Log.e(TAG, "onDataChange: " + uInfo.getLatitude().toString());
-                Log.d(TAG, "We made it here");
-                text.setText(uInfo.getLatitude().toString());
+                uInfo = dataSnapshot.child(userID).getValue(UserLocationPoints.class);
+
             }
 
             @Override
@@ -72,7 +70,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        findViewById(R.id.GalleryButton).setOnClickListener(this);
+        findViewById(R.id.MapButton).setOnClickListener(this);
+
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -98,10 +101,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
                 if(latlng[0] != 0.0 && latlng[1] != 0.0) {
                     FirebaseUser user = mAuth.getCurrentUser();
-                    //UserLocationPoints userLocationPoints = mDatabase.child(user.getUid()).getRoot();
+                    uInfo.updateLatitude(latlng[0]);
+                    uInfo.updateLongitude(latlng[1]);
+                    mDatabase.child(user.getUid()).setValue(uInfo);
+
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                             Uri.parse("http://maps.google.com/maps?&daddr=" + latlng[0] + "," + latlng[1]));
                     startActivity(intent);
+                }else{
+                    Toast.makeText(getApplicationContext(), "No Coordinates found", Toast.LENGTH_SHORT).show();
+
                 }
 
             } catch (IOException e) {
@@ -115,24 +124,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void showData(DataSnapshot dataSnapshot) {
-        for(DataSnapshot ds : dataSnapshot.getChildren()){
-            UserLocationPoints uInfo = new UserLocationPoints();
-            uInfo.setLatitude(ds.child(userID).getValue(UserLocationPoints.class).getLatitude()); //set the name
-            uInfo.setLongitude(ds.child(userID).getValue(UserLocationPoints.class).getLongitude()); //set the email
-
-            //display all the information
-            Log.d(TAG, "showData: lat: " + uInfo.getLatitude());
-            Log.d(TAG, "showData: lon: " + uInfo.getLongitude());
-        }
-    }
-
     @Override
     public void onClick(View view) {
-        // Create the Intent for Image Gallery.
-        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        switch (view.getId()) {
+            case R.id.MapButton:
+                startActivity(new Intent(this, MapsActivity.class));
+                break;
 
-        // Start new activity with the LOAD_IMAGE_RESULTS to handle back the results when image is picked from the Image Gallery.
-        startActivityForResult(i, LOAD_IMAGE_RESULTS);
+            case R.id.GalleryButton:
+                // Create the Intent for Image Gallery.
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                // Start new activity with the LOAD_IMAGE_RESULTS to handle back the results when image is picked from the Image Gallery.
+                startActivityForResult(i, LOAD_IMAGE_RESULTS);;
+                break;
+        }
+
+
     }
 }

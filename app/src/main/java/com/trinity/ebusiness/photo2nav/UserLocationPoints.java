@@ -45,4 +45,8 @@ public class UserLocationPoints {
     public void updateLongitude(float newLon){
         longitude.add(newLon);
     }
+
+    public boolean isEmpty(){
+        return latitude.isEmpty();
+    }
 }
